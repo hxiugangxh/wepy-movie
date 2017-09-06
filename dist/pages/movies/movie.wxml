@@ -1,0 +1,120 @@
+
+  <view class="search">
+    <icon type="search" class="search-img" size="13" color="#405f80"/>
+    <input type="text" placeholder="血战钢锯岭、你的名字" placeholder-class="placeholder" bindfocus="onBindFocus" bindblur="onBindBlur"/>
+    <image  wx:if="{{searchPanelShow}}" src="/images/icon/xx.png" class="xx-img" bindtap="onCancelImgTap"/>
+  </view>
+
+  <view class="container"  wx:if="{{containerShow}}">
+    <view class="movies-template">
+      <block>
+        
+  <view class="movie-list-container">
+    <view class="inner-container">
+      <view class="movie-head">
+        <text class="slogan">{{inTheaters.categoryTitle}}</text>
+        <view catchtap="$movieList$onMoreTap" class="more" data-category="{{inTheaters.categoryTitle}}" data-com-index="{{undefined}}">
+          <text class="more-text">更多</text>
+          <image class="more-img" src="/images/icon/arrow-right.png"/>
+        </view>
+      </view>
+      <view class="movies-container">
+        <block wx:for="{{inTheaters.movies}}" wx:for-index="$movieList$index" wx:for-item="$movieList$movie" wx:key="$movieList$key">
+          
+  <view class="movie-container" catchtap="$movieList$movie$onMovieTap" data-movieId="{{$movieList$movie.movieId}}" data-com-index="{{undefined}}-{{$movieList$index}}">
+    <image class="movie-img" src="{{$movieList$movie.coverageUrl}}"/>
+    <text class="movie-title">{{$movieList$movie.title}}</text>
+
+    <view class="stars-container">
+      <view class="stars">
+        <block wx:for="{{$movieList$movie.stars}}" wx:for-index="$movieList$movie$index" wx:for-item="$movieList$movie$num" wx:key="$movieList$movie$key">
+          <image  wx:if="{{$movieList$movie$num}}" src="/images/icon/star.png"/>
+          <image  wx:else src="/images/icon/none-star.png"/>
+        </block>
+      </view>
+      <text class="star-score">{{$movieList$movie.average}}</text>
+    </view>
+  </view>
+
+        </block>
+      </view>
+    </view>
+  </view>
+
+      </block>
+    </view>
+    <view class="movies-template">
+      <block>
+        
+  <view class="movie-list-container">
+    <view class="inner-container">
+      <view class="movie-head">
+        <text class="slogan">{{comingSoon.categoryTitle}}</text>
+        <view catchtap="$movieList$onMoreTap" class="more" data-category="{{comingSoon.categoryTitle}}" data-com-index="{{undefined}}">
+          <text class="more-text">更多</text>
+          <image class="more-img" src="/images/icon/arrow-right.png"/>
+        </view>
+      </view>
+      <view class="movies-container">
+        <block wx:for="{{comingSoon.movies}}" wx:for-index="$movieList$index" wx:for-item="$movieList$movie" wx:key="$movieList$key">
+          
+  <view class="movie-container" catchtap="$movieList$movie$onMovieTap" data-movieId="{{$movieList$movie.movieId}}" data-com-index="{{undefined}}-{{$movieList$index}}">
+    <image class="movie-img" src="{{$movieList$movie.coverageUrl}}"/>
+    <text class="movie-title">{{$movieList$movie.title}}</text>
+
+    <view class="stars-container">
+      <view class="stars">
+        <block wx:for="{{$movieList$movie.stars}}" wx:for-index="$movieList$movie$index" wx:for-item="$movieList$movie$num" wx:key="$movieList$movie$key">
+          <image  wx:if="{{$movieList$movie$num}}" src="/images/icon/star.png"/>
+          <image  wx:else src="/images/icon/none-star.png"/>
+        </block>
+      </view>
+      <text class="star-score">{{$movieList$movie.average}}</text>
+    </view>
+  </view>
+
+        </block>
+      </view>
+    </view>
+  </view>
+
+      </block>
+    </view>
+    <view class="movies-template">
+      <block>
+        
+  <view class="movie-list-container">
+    <view class="inner-container">
+      <view class="movie-head">
+        <text class="slogan">{{top250.categoryTitle}}</text>
+        <view catchtap="$movieList$onMoreTap" class="more" data-category="{{top250.categoryTitle}}" data-com-index="{{undefined}}">
+          <text class="more-text">更多</text>
+          <image class="more-img" src="/images/icon/arrow-right.png"/>
+        </view>
+      </view>
+      <view class="movies-container">
+        <block wx:for="{{top250.movies}}" wx:for-index="$movieList$index" wx:for-item="$movieList$movie" wx:key="$movieList$key">
+          
+  <view class="movie-container" catchtap="$movieList$movie$onMovieTap" data-movieId="{{$movieList$movie.movieId}}" data-com-index="{{undefined}}-{{$movieList$index}}">
+    <image class="movie-img" src="{{$movieList$movie.coverageUrl}}"/>
+    <text class="movie-title">{{$movieList$movie.title}}</text>
+
+    <view class="stars-container">
+      <view class="stars">
+        <block wx:for="{{$movieList$movie.stars}}" wx:for-index="$movieList$movie$index" wx:for-item="$movieList$movie$num" wx:key="$movieList$movie$key">
+          <image  wx:if="{{$movieList$movie$num}}" src="/images/icon/star.png"/>
+          <image  wx:else src="/images/icon/none-star.png"/>
+        </block>
+      </view>
+      <text class="star-score">{{$movieList$movie.average}}</text>
+    </view>
+  </view>
+
+        </block>
+      </view>
+    </view>
+  </view>
+
+      </block>
+    </view>
+  </view>

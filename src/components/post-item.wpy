@@ -1,0 +1,100 @@
+<template>
+  <view class="post-container">
+    <view class="post-author-date">
+      <image class="post-author" src="{{post.imgSrc}}"></image>
+      <text class="post-date">{{index + 1}} -- {{post.date}}</text>
+    </view>
+    <text class="post-title">{{post.title}}</text>
+    <image class="post-image" src="{{post.headImgSrc}}"></image>
+    <text class="post-content">{{post.content}}</text>
+    <view class="post-like">
+      <image class="post-like-image" src="/images/icon/chat.png"></image>
+      <text class="post-like-font">{{post.reading}}</text>
+      <image class="post-like-image" src="/images/icon/view.png"></image>
+      <text class="post-like-font">{{post.collection}}</text>
+    </view>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+
+  export default class PostItem extends wepy.component {
+    data = {}
+  }
+</script>
+
+<style lang="scss">
+  @import "../styles/variable.scss";
+
+  .post-container {
+    display: flex;
+    flex-direction: column;
+    margin-top: rpx(20);
+    margin-bottom: rpx(40);
+    background-color: #fff;
+    border-bottom: 1px solid #ededed;
+    border-top: 1px solid #ededed;
+    padding-bottom: 5px;
+  }
+
+  .post-author-date {
+    margin-top: rpx(10) 0 rpx(20) rpx(10);
+  }
+
+  .post-author {
+    width: rpx(60);
+    height: rpx(60);
+    border-radius: 50%;
+    margin-left: rpx(10);
+    vertical-align: middle;
+  }
+
+  .post-date {
+    margin-left: rpx(20);
+    vertical-align: middle;
+    margin-bottom: 5px;
+    font-size: rpx(26);
+  }
+
+  .post-title {
+    font-size: rpx(34);
+    font-weight: 600;
+    color: #333;
+    margin: 3px 0 5px 10px;
+  }
+
+  .post-image {
+    margin-left: 16px;
+    width: 100%;
+    height: rpx(340);
+    margin: auto 0;
+    margin-bottom: 15px;
+  }
+
+  .post-content {
+    color: #666;
+    font-size: rpx(28);
+    margin: 0 3px 10px 3px;
+    line-height: rpx(40);
+  }
+
+  .post-like {
+    font-size: 13px;
+    flex-direction: row;
+    line-height: 16px;
+    margin-left: 10px;
+  }
+
+  .post-like-image {
+    height: 16px;
+    width: 16px;
+    margin-left: 12px;
+    vertical-align: middle;
+  }
+
+  .post-like-font {
+    vertical-align: middle;
+    margin-left: 5px;
+  }
+</style>

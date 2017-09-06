@@ -1,0 +1,181 @@
+<template>
+
+  <scroll-view scroll-y="true" style="height: 1205rpx" bindscrolltolower="onScrolltolower" lower-threshold="3">
+    <repeat>
+      <movieDataGrid :movies="movies"></movieDataGrid>
+    </repeat>
+
+  </scroll-view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  import util from '../../../utils/util'
+  import MovieDataGrid from '../../../components/movie-data-grid'
+
+  export default class MoreMovies extends wepy.page {
+    components = {
+      movieDataGrid: MovieDataGrid
+    }
+
+    data = {
+      movies: {}
+    }
+
+    methods = {}
+
+    async onLoad(options) {
+      let title = options.title
+      title = '正在热映'
+
+      this.data.navigateTitle = title
+
+      let doubanBase = this.$parent.globalData.doubanBase
+
+      let inThreaterUrl = doubanBase + '/v2/movie/in_theaters' + '?start=0&count=10'
+      let cominSoonUrl = doubanBase + '/v2/movie/coming_soon' + '?start=0&count=10'
+      let top250Url = doubanBase + '/v2/movie/top250' + '?start=0&count=10'
+
+      this.$parent.globalData.moreMoviesTitle = title
+      switch (title) {
+        case '正在热映':
+          this.loadMovies(inThreaterUrl, '正在热映')
+          break
+        case '即将上映':
+          this.loadMovies(cominSoonUrl, '即将上映')
+          break
+        case 'Top250':
+          this.loadMovies(top250Url, 'Top250')
+          break
+        default:
+          console.log('加载更多标题参数传输错误')
+          break
+      }
+
+      console.log(this.movies)
+    }
+
+    onReady() {
+//      wepy.setNavigationBarTitle({
+//        title: this.data.navigateTitle
+//      })
+    }
+
+    loadMovies(URL, loadTitle) {
+      let dataGrid = wepy.getStorageSync('dataGrid')
+      let moreMoviesTitle = this.$parent.globalData.moreMoviesTitle
+
+      if (moreMoviesTitle !== loadTitle) {
+        console.log('请求数据')
+        util.http(URL, this.dealDoubanData)
+      } else {
+        if (dataGrid) {
+          console.log('旧数据')
+          this.dealDoubanData(dataGrid)
+        } else {
+          console.log('请求数据')
+          util.http(URL, this.dealDoubanData)
+        }
+      }
+    }
+
+    dealDoubanData(dataGrid) {
+      wepy.setStorageSync('dataGrid', dataGrid)
+      let subjects = dataGrid.subjects
+
+      let movies = []
+      let rowMovie = []
+
+      for (let i = 0; i < subjects.length; i++) {
+        let subject = subjects[i]
+
+        let title = subject.title
+        if (title.length > 6) {
+          title = title.substring(0, 6) + '...'
+        }
+        let movie = {
+          stars: util.convertToStarsArray(subject.rating.stars),
+          coverageUrl: subject.images.large,
+          title: title,
+          average: subject.rating.average
+        }
+
+        if (i === 0) {
+          rowMovie.push(movie)
+        } else {
+          if (i % 3 === 2) {
+            rowMovie.push(movie)
+            movies.push(rowMovie)
+            rowMovie = []
+          } else {
+            rowMovie.push(movie)
+          }
+        }
+
+        if (i === subjects.length - 1 && i % 3 !== 2) {
+          movies.push(rowMovie)
+        }
+      }
+      this.movies = movies
+    }
+
+    onScrolltolower(event) {
+      wepy.showNavigationBarLoading()
+
+      let movies = this.data.movies
+
+      let subjects = this.moviesToArr(movies)
+
+      movies = []
+      let rowMovie = []
+      for (let i = 0; i < subjects.length; i++) {
+        var movie = subjects[i]
+
+        if (i === 0) {
+          rowMovie.push(movie)
+        } else {
+          if (i % 3 === 2) {
+            rowMovie.push(movie)
+            movies.push(rowMovie)
+            rowMovie = []
+          } else {
+            rowMovie.push(movie)
+          }
+        }
+
+        if (i === subjects.length - 1 && i % 3 !== 2) {
+          movies.push(rowMovie)
+        }
+      }
+
+      this.setData({
+        movies: movies
+      })
+
+      wepy.hideNavigationBarLoading()
+    }
+
+    moviesToArr(movies) {
+      let arr = []
+      let addArr = []
+      for (let i = 0; i < movies.length; i++) {
+        for (let j = 0; j < movies[i].length; j++) {
+          arr.push(movies[i][j])
+
+          if (addArr.length < 20) {
+            addArr.push(movies[i][j])
+          }
+        }
+      }
+      arr = arr.concat(arr)
+
+      return arr
+    }
+  }
+
+</script>
+
+<style lang="scss">
+  @import "../../../styles/variable.scss";
+
+</style>

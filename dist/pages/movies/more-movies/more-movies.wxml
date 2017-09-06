@@ -1,0 +1,35 @@
+
+
+  <scroll-view scroll-y="true" style="height: 1205rpx" bindscrolltolower="onScrolltolower" lower-threshold="3">
+    <block>
+      
+  <view class="grid-container">
+    <block wx:for="{{movies}}" wx:for-index="$movieDataGrid$index" wx:for-item="$movieDataGrid$rowMovie" wx:key="$movieDataGrid$key">
+      <view class="grid-row">
+        <block wx:for="{{$movieDataGrid$rowMovie}}" wx:for-index="$movieDataGrid$index" wx:for-item="$movieDataGrid$movie" wx:key="$movieDataGrid$key">
+          <view class="grid-row-movie">
+            
+  <view class="movie-container" catchtap="$movieDataGrid$movie$onMovieTap" data-movieId="{{$movieDataGrid$movie.movieId}}" data-com-index="{{undefined}}-{{$movieDataGrid$index}}">
+    <image class="movie-img" src="{{$movieDataGrid$movie.coverageUrl}}"/>
+    <text class="movie-title">{{$movieDataGrid$movie.title}}</text>
+
+    <view class="stars-container">
+      <view class="stars">
+        <block wx:for="{{$movieDataGrid$movie.stars}}" wx:for-index="$movieDataGrid$movie$index" wx:for-item="$movieDataGrid$movie$num" wx:key="$movieDataGrid$movie$key">
+          <image  wx:if="{{$movieDataGrid$movie$num}}" src="/images/icon/star.png"/>
+          <image  wx:else src="/images/icon/none-star.png"/>
+        </block>
+      </view>
+      <text class="star-score">{{$movieDataGrid$movie.average}}</text>
+    </view>
+  </view>
+
+          </view>
+        </block>
+      </view>
+    </block>
+  </view>
+
+    </block>
+
+  </scroll-view>

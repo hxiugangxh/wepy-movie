@@ -1,0 +1,50 @@
+<template>
+  <view class="grid-container">
+    <repeat for="{{movies}}" item="rowMovie">
+      <view class="grid-row">
+        <repeat for="{{rowMovie}}" item="movie">
+          <view class="grid-row-movie">
+            <movie is="movieTemplate" :movie="movie"/>
+          </view>
+        </repeat>
+      </view>
+    </repeat>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  import Movie from './movie'
+
+  export default class MovieDataGrid extends wepy.component {
+    data = {}
+
+    components = {
+      movie: Movie
+    }
+  }
+</script>
+
+<style lang="scss">
+  @import "../styles/variable.scss";
+
+  .grid-container {
+    background-color: #f2f2f2;
+    display: flex;
+    flex-direction: column;
+    margin-top: rpx(10);
+  }
+
+  .grid-row {
+    background-color: #fff;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    margin-bottom: rpx(15);
+  }
+
+  .grid-row-movie {
+    margin-left: rpx(7);
+  }
+</style>

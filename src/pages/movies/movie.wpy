@@ -1,0 +1,172 @@
+<template>
+  <view class="search">
+    <icon type="search" class="search-img" size="13" color="#405f80"></icon>
+    <input type="text" placeholder="血战钢锯岭、你的名字"
+           placeholder-class="placeholder" bindfocus="onBindFocus"
+           bindblur="onBindBlur"/>
+    <image wx:if="{{searchPanelShow}}" src="/images/icon/xx.png" class="xx-img" bindtap="onCancelImgTap"></image>
+  </view>
+
+  <view class="container" wx:if="{{containerShow}}">
+    <view class="movies-template">
+      <repeat>
+        <movieList :moiveList="inTheaters"></movieList>
+      </repeat>
+    </view>
+    <view class="movies-template">
+      <repeat>
+        <movieList :moiveList="comingSoon"></movieList>
+      </repeat>
+    </view>
+    <view class="movies-template">
+      <repeat>
+        <movieList :moiveList="top250"></movieList>
+      </repeat>
+    </view>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  import MovieList from '../../components/movie-list'
+  import util from '../../utils/util'
+
+  export default class Movie extends wepy.page {
+    components = {
+      movieList: MovieList
+    }
+
+    data = {
+      inTheaters: {},
+      comingSoon: {},
+      top250: {},
+      searchResult: {},
+      containerShow: true,
+      searchPanelShow: false,
+      movie: {}
+    }
+
+    methods = {}
+
+    async onLoad() {
+      let inTheatersUrl = this.$parent.globalData.doubanBase +
+        '/v2/movie/in_theaters' + '?start=0&count=3'
+      let comingSoonUrl = this.$parent.globalData.doubanBase +
+        '/v2/movie/coming_soon' + '?start=0&count=3'
+      let top250Url = this.$parent.globalData.doubanBase +
+        '/v2/movie/top250' + '?start=0&count=3'
+
+      if (wepy.getStorageSync('inTheaters') !== '') {
+        this.inTheaters = wepy.getStorageSync('inTheaters')
+      } else {
+        this.getMovieListData(inTheatersUrl, 'inTheaters', '正在热映')
+      }
+
+      if (wepy.getStorageSync('comingSoon') !== '') {
+        this.comingSoon = wepy.getStorageSync('comingSoon')
+      } else {
+        this.getMovieListData(comingSoonUrl, 'comingSoon', '即将上映')
+      }
+
+      if (wepy.getStorageSync('top250') !== '') {
+        this.top250 = wepy.getStorageSync('top250')
+      } else {
+        this.getMovieListData(top250Url, 'top250', '豆瓣Top250')
+      }
+    }
+
+    getMovieListData(url, settedKey, categoryTitle) {
+      let that = this
+      wepy.request({
+        url: url,
+        method: 'GET', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
+        header: {
+          'Content-Type': 'json'
+        },
+        success: function (res) {
+          that.processDoubanData(res.data, settedKey, categoryTitle)
+        },
+        fail: function (error) {
+          console.log(error)
+        }
+      })
+    }
+
+    processDoubanData(moviesDouban, settedKey, categoryTitle) {
+      let movies = []
+      for (let idx in moviesDouban.subjects) {
+        let subject = moviesDouban.subjects[idx]
+        let title = subject.title
+        if (title.length >= 6) {
+          title = title.substring(0, 6) + '...'
+        }
+        // [1,1,1,1,1] [1,1,1,0,0]
+        let temp = {
+          stars: util.convertToStarsArray(subject.rating.stars),
+          title: title,
+          average: subject.rating.average,
+          coverageUrl: subject.images.large,
+          movieId: subject.id
+        }
+        movies.push(temp)
+      }
+      let readyData = {}
+      readyData[settedKey] = {
+        categoryTitle: categoryTitle,
+        movies: movies
+      }
+
+      this.setData(readyData)
+
+      wepy.setStorageSync(settedKey, readyData[settedKey])
+    }
+  }
+</script>
+
+<style lang="scss">
+  @import "../../styles/variable.scss";
+
+  .container {
+    background-color: #f2f2f2;
+  }
+
+  .search {
+    background-color: #f2f2f2;
+    height: rpx(80);
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+  }
+
+  .search-img {
+    margin: auto 0 auto rpx(20);
+  }
+
+  .search input {
+    height: 100%;
+    width: rpx(600);
+    margin-left: 20px;
+    font-size: rpx(28);
+  }
+
+  .placeholder {
+    font-size: 14px;
+    color: #d1d1d1;
+    margin-left: rpx(20);
+  }
+
+  .movies-template {
+    margin-bottom: rpx(10);
+  }
+
+  .search-panel {
+    position: absolute;
+    top: rpx(80);
+  }
+
+  .xx-img {
+    height: rpx(30);
+    width: rpx(30);
+    margin: auto 0 auto rpx(10);
+  }
+</style>

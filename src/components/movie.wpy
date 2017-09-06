@@ -1,0 +1,72 @@
+<template>
+  <view class="movie-container" catchtap="onMovieTap" data-movieId="{{movie.movieId}}">
+    <image class="movie-img" src="{{movie.coverageUrl}}"></image>
+    <text class="movie-title">{{movie.title}}</text>
+
+    <view class="stars-container">
+      <view class="stars">
+        <repeat for="{{movie.stars}}" item="num">
+          <image wx:if="{{num}}" src="/images/icon/star.png"></image>
+          <image wx:else src="/images/icon/none-star.png"></image>
+        </repeat>
+      </view>
+      <text class="star-score">{{movie.average}}</text>
+    </view>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+
+  export default class PostItem extends wepy.component {
+    data = {}
+  }
+</script>
+
+<style lang="scss">
+  @import "../styles/variable.scss";
+
+  .movie-container {
+    display: flex;
+    flex-direction: column;
+    padding: 0 rpx(22);
+  }
+
+  .movie-img {
+    width: rpx(200);
+    height: rpx(270);
+    padding-bottom: rpx(20);
+  }
+
+  .movie-title {
+    margin-bottom: rpx(16);
+    font-size: rpx(24);
+  }
+
+  .stars-container {
+    display: flex;
+    flex-direction: row;
+    margin-top: rpx(10);
+    margin-bottom: rpx(10);
+  }
+
+  .stars {
+    display: flex;
+    flex-direction: row;
+    height: rpx(17);
+  }
+
+  .stars image {
+    padding-left: rpx(3);
+    height: rpx(17);
+    width: rpx(17);
+  }
+
+  .star-score {
+    margin-left: rpx(10);
+    line-height: rpx(17);
+    font-size: 14px;
+    color: #1f3463;
+  }
+
+</style>

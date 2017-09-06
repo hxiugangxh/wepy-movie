@@ -1,0 +1,65 @@
+<template>
+  <view>
+    <swiper indicator-dots="true" autoplay="true" interval="5000">
+      <swiper-item>
+        <image src="/images/wx.png"></image>
+      </swiper-item>
+      <swiper-item class="swiper">
+        <image src="/images/vr.png"></image>
+      </swiper-item>
+      <swiper-item class="swiper">
+        <image src="/images/iqiyi.png"></image>
+      </swiper-item>
+    </swiper>
+
+    <repeat for="{{postList}}" item="post" index="index">
+      <view @tap.stop="onPostTap({{post.postId}})">
+        <postItem :post="post" :index="index"></postItem>
+      </view>
+    </repeat>
+
+  </view>
+</template>
+<script>
+  import wepy from 'wepy'
+  import postData from '../../data/posts-data'
+  import PostItem from '../../components/post-item'
+
+  export default class Post extends wepy.page {
+    config = {
+      navigationBarTitleText: '文与字'
+    }
+
+    components = {
+      postItem: PostItem
+    }
+
+    data = {
+      postList: []
+    }
+    methods = {
+      onPostTap(postId) {
+        wepy.navigateTo({
+          url: 'posts-detail/posts-detail?id=' + postId
+        })
+      }
+    }
+
+    async onLoad() {
+      this.postList = postData.postList
+    }
+  }
+</script>
+<style lang="scss">
+  @import "../../styles/variable.scss";
+
+  swiper {
+    width: 100%;
+    height: rpx(500);
+  }
+
+  swiper image {
+    width: 100%;
+    height: rpx(500);
+  }
+</style>
