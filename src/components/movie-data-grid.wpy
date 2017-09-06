@@ -42,9 +42,10 @@
     align-items: center;
     justify-content: flex-start;
     margin-bottom: rpx(15);
+    padding: 0 rpx(15);
   }
 
   .grid-row-movie {
-    margin-left: rpx(7);
+    margin: rpx(10);
   }
 </style>

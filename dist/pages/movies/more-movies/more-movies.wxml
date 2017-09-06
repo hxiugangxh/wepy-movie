@@ -9,8 +9,8 @@
         <block wx:for="{{$movieDataGrid$rowMovie}}" wx:for-index="$movieDataGrid$index" wx:for-item="$movieDataGrid$movie" wx:key="$movieDataGrid$key">
           <view class="grid-row-movie">
             
-  <view class="movie-container" catchtap="$movieDataGrid$movie$onMovieTap" data-movieId="{{$movieDataGrid$movie.movieId}}" data-com-index="{{undefined}}-{{$movieDataGrid$index}}">
-    <image class="movie-img" src="{{$movieDataGrid$movie.coverageUrl}}"/>
+  <view class="movie-container">
+    <image class="movie-img" src="{{$movieDataGrid$movie.converageUrl}}"/>
     <text class="movie-title">{{$movieDataGrid$movie.title}}</text>
 
     <view class="stars-container">

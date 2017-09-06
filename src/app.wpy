@@ -9,9 +9,10 @@
   export default class extends wepy.app {
     config = {
       pages: [
+        'pages/movies/more-movies/more-movies',
         'pages/movies/movie',
         'pages/posts/post',
-        'pages/movies/more-movies/more-movies',
+
         'pages/posts/posts-detail/posts-detail',
         'pages/index'
       ],

@@ -1,28 +1,16 @@
 <template>
   <view class="search">
-    <icon type="search" class="search-img" size="13" color="#405f80"></icon>
-    <input type="text" placeholder="血战钢锯岭、你的名字"
-           placeholder-class="placeholder" bindfocus="onBindFocus"
-           bindblur="onBindBlur"/>
-    <image wx:if="{{searchPanelShow}}" src="/images/icon/xx.png" class="xx-img" bindtap="onCancelImgTap"></image>
+    <icon type="search" size="13"></icon>
+    <input placeholder="请输入电影名称" bindfocus="onFocus" bindconfirm="query" placeholder-class="placeholder"/>
+    <image src="/images/icon/xx.png" wx:if="{{isSearch}}" catchtap="closeSearch"/>
   </view>
 
-  <view class="container" wx:if="{{containerShow}}">
-    <view class="movies-template">
-      <repeat>
-        <movieList :moiveList="inTheaters"></movieList>
-      </repeat>
-    </view>
-    <view class="movies-template">
-      <repeat>
-        <movieList :moiveList="comingSoon"></movieList>
-      </repeat>
-    </view>
-    <view class="movies-template">
-      <repeat>
-        <movieList :moiveList="top250"></movieList>
-      </repeat>
-    </view>
+  <view class="container" wx:if="{{!isSearch}}">
+    <repeat for="{{topicMovieList}}" item="movieList">
+      <view class="movies-template">
+        <movieList :moiveList="movieList"></movieList>
+      </view>
+    </repeat>
   </view>
 </template>
 
@@ -32,93 +20,106 @@
   import util from '../../utils/util'
 
   export default class Movie extends wepy.page {
+    config = {
+      navigationBarTitleText: '电影'
+    }
+
     components = {
       movieList: MovieList
     }
 
     data = {
+      topicMovieList: [],
       inTheaters: {},
       comingSoon: {},
       top250: {},
-      searchResult: {},
-      containerShow: true,
-      searchPanelShow: false,
-      movie: {}
+      isSearch: false,
+      searchMovies: {}
     }
 
     methods = {}
 
     async onLoad() {
-      let inTheatersUrl = this.$parent.globalData.doubanBase +
-        '/v2/movie/in_theaters' + '?start=0&count=3'
-      let comingSoonUrl = this.$parent.globalData.doubanBase +
-        '/v2/movie/coming_soon' + '?start=0&count=3'
-      let top250Url = this.$parent.globalData.doubanBase +
-        '/v2/movie/top250' + '?start=0&count=3'
+      let doubanBase = this.$parent.globalData.doubanBase
 
-      if (wepy.getStorageSync('inTheaters') !== '') {
-        this.inTheaters = wepy.getStorageSync('inTheaters')
+      let inThreaterUrl = doubanBase + '/v2/movie/in_theaters' + '?start=0&count=3'
+      let cominSoonUrl = doubanBase + '/v2/movie/coming_soon' + '?start=0&count=3'
+      let top250Url = doubanBase + '/v2/movie/top250' + '?start=0&count=3'
+
+      let inThreater = wepy.getStorageSync('inThreater')
+      let cominSoon = wepy.getStorageSync('cominSoon')
+      let top250 = wepy.getStorageSync('top250')
+
+      if (inThreater === '') {
+        this.getMovieListData(inThreaterUrl, 'inThreater', '正在热映')
       } else {
-        this.getMovieListData(inTheatersUrl, 'inTheaters', '正在热映')
+        this.topicMovieList.push(inThreater)
       }
 
-      if (wepy.getStorageSync('comingSoon') !== '') {
-        this.comingSoon = wepy.getStorageSync('comingSoon')
+      if (cominSoon === '') {
+        this.getMovieListData(cominSoonUrl, 'cominSoon', '即将上映')
       } else {
-        this.getMovieListData(comingSoonUrl, 'comingSoon', '即将上映')
+        this.topicMovieList.push(cominSoon)
       }
 
-      if (wepy.getStorageSync('top250') !== '') {
-        this.top250 = wepy.getStorageSync('top250')
+      if (top250 === '') {
+        this.getMovieListData(top250Url, 'top250', 'Top250')
       } else {
-        this.getMovieListData(top250Url, 'top250', '豆瓣Top250')
+        this.topicMovieList.push(top250)
       }
+
+      console.log(this.topicMovieList)
     }
 
-    getMovieListData(url, settedKey, categoryTitle) {
+    getMovieListData(url, key, myTitle) {
       let that = this
       wepy.request({
         url: url,
-        method: 'GET', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
+        data: {},
+        method: 'GET',
         header: {
           'Content-Type': 'json'
         },
         success: function (res) {
-          that.processDoubanData(res.data, settedKey, categoryTitle)
+          console.log('请求成功')
+          console.log(res)
+          that.processDoubanData(res.data, key, myTitle)
         },
-        fail: function (error) {
-          console.log(error)
+        fail: function () {
+          console.log('请求失败')
         }
       })
     }
 
-    processDoubanData(moviesDouban, settedKey, categoryTitle) {
+    processDoubanData(movieDouban, key, myTitle) {
       let movies = []
-      for (let idx in moviesDouban.subjects) {
-        let subject = moviesDouban.subjects[idx]
+
+      for (let index in movieDouban.subjects) {
+        let subject = movieDouban.subjects[index]
+
         let title = subject.title
-        if (title.length >= 6) {
+        if (title.length > 6) {
           title = title.substring(0, 6) + '...'
         }
-        // [1,1,1,1,1] [1,1,1,0,0]
-        let temp = {
+
+        var temp = {
           stars: util.convertToStarsArray(subject.rating.stars),
           title: title,
           average: subject.rating.average,
-          coverageUrl: subject.images.large,
+          converageUrl: subject.images.large,
           movieId: subject.id
         }
+
         movies.push(temp)
       }
-      let readyData = {}
-      readyData[settedKey] = {
-        categoryTitle: categoryTitle,
+      this.topicMovieList.push({
+        title: myTitle,
         movies: movies
-      }
+      })
 
-      this.setData(readyData)
+      this.$apply()
 
-      wepy.setStorageSync(settedKey, readyData[settedKey])
+      wepy.setStorageSync(key, {title: myTitle, movies: movies})
     }
   }
 </script>
@@ -128,43 +129,48 @@
 
   .container {
     background-color: #f2f2f2;
+    margin-bottom: rpx(200)
+  }
+
+  .movies-template {
+    margin-bottom: rpx(15);
+  }
+
+  .search-container {
+    height: rpx(80);
+    width: 100%;
+    background-color: #f2f2f2;
   }
 
   .search {
     background-color: #f2f2f2;
     height: rpx(80);
-    width: 100%;
     display: flex;
     flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    margin: rpx(5) rpx(20) 0 rpx(20);
   }
 
-  .search-img {
-    margin: auto 0 auto rpx(20);
-  }
-
-  .search input {
-    height: 100%;
-    width: rpx(600);
-    margin-left: 20px;
-    font-size: rpx(28);
+  .search icon {
+    margin-left: rpx(10);
   }
 
   .placeholder {
+    background-color: #f2f2f2;
     font-size: 14px;
     color: #d1d1d1;
     margin-left: rpx(20);
   }
 
-  .movies-template {
-    margin-bottom: rpx(10);
+  .search input {
+    height: 100%;
+    width: rpx(625);
+    font-size: rpx(28);
+    margin-left: rpx(20);
   }
 
-  .search-panel {
-    position: absolute;
-    top: rpx(80);
-  }
-
-  .xx-img {
+  .search image {
     height: rpx(30);
     width: rpx(30);
     margin: auto 0 auto rpx(10);

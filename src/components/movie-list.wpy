@@ -1,18 +1,17 @@
 <template>
   <view class="movie-list-container">
-    <view class="inner-container">
-      <view class="movie-head">
-        <text class="slogan">{{moiveList.categoryTitle}}</text>
-        <view catchtap="onMoreTap" class="more" data-category="{{moiveList.categoryTitle}}">
-          <text class="more-text">更多</text>
-          <image class="more-img" src="/images/icon/arrow-right.png"></image>
-        </view>
+    <view class="movie-header">
+      <text class="slogan">{{moiveList.title}}</text>
+      <view class="more">
+        <text class="more-text" data-title="{{moiveList.title}}" catchtap="onMoreMoives">更多</text>
+        <image class="more-img" src="/images/icon/arrow-right.png"></image>
       </view>
-      <view class="movies-container">
-        <repeat for="{{moiveList.movies}}" item="movie">
-          <movie :movie="movie"></movie>
-        </repeat>
-      </view>
+    </view>
+
+    <view class="movies-container">
+      <repeat for="{{moiveList.movies}}" item="movie">
+        <movie :movie="movie"></movie>
+      </repeat>
     </view>
   </view>
 </template>
@@ -39,15 +38,12 @@
     flex-direction: column;
   }
 
-  .inner-container {
-    margin: 0 auto rpx(20);
-  }
-
-  .movie-head {
-    padding: rpx(30) rpx(20) rpx(22);
-    /*display:flex;
+  .movie-header {
+    padding: rpx(10) rpx(20) rpx(22);
+    display: flex;
     flex-direction: row;
-    justify-content:space-between;*/
+    justify-content: space-between;
+    align-items: center;
   }
 
   .slogan {
@@ -55,11 +51,12 @@
   }
 
   .more {
-    float: right;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
   }
 
   .more-text {
-    vertical-align: middle;
     margin-right: rpx(10);
     color: #1f4ba5;
   }
@@ -67,11 +64,12 @@
   .more-img {
     width: rpx(9);
     height: rpx(16);
-    vertical-align: middle;
   }
 
   .movies-container {
     display: flex;
     flex-direction: row;
+    justify-content: space-between;
+    padding: 0 rpx(20);
   }
 </style>

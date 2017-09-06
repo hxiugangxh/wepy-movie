@@ -19,16 +19,15 @@
     }
 
     data = {
-      movies: {}
+      movies: []
     }
 
     methods = {}
 
-    async onLoad(options) {
-      let title = options.title
-      title = '正在热映'
+    async onLoad(params) {
+      let title = '正在热映'
 
-      this.data.navigateTitle = title
+      this.navigateTitle = title
 
       let doubanBase = this.$parent.globalData.doubanBase
 
@@ -51,14 +50,12 @@
           console.log('加载更多标题参数传输错误')
           break
       }
-
-      console.log(this.movies)
     }
 
     onReady() {
-//      wepy.setNavigationBarTitle({
-//        title: this.data.navigateTitle
-//      })
+      wepy.setNavigationBarTitle({
+        title: this.navigateTitle
+      })
     }
 
     loadMovies(URL, loadTitle) {
@@ -70,7 +67,6 @@
         util.http(URL, this.dealDoubanData)
       } else {
         if (dataGrid) {
-          console.log('旧数据')
           this.dealDoubanData(dataGrid)
         } else {
           console.log('请求数据')
@@ -95,7 +91,7 @@
         }
         let movie = {
           stars: util.convertToStarsArray(subject.rating.stars),
-          coverageUrl: subject.images.large,
+          converageUrl: subject.images.large,
           title: title,
           average: subject.rating.average
         }
@@ -148,9 +144,9 @@
         }
       }
 
-      this.setData({
-        movies: movies
-      })
+      this.movies = movies
+
+      this.$apply()
 
       wepy.hideNavigationBarLoading()
     }
@@ -162,12 +158,12 @@
         for (let j = 0; j < movies[i].length; j++) {
           arr.push(movies[i][j])
 
-          if (addArr.length < 20) {
+          if ((i + 1) * j + j < 10) {
             addArr.push(movies[i][j])
           }
         }
       }
-      arr = arr.concat(arr)
+      arr = [...arr, ...addArr]
 
       return arr
     }
@@ -177,5 +173,6 @@
 
 <style lang="scss">
   @import "../../../styles/variable.scss";
+
 
 </style>

@@ -1,6 +1,6 @@
 <template>
-  <view class="movie-container" catchtap="onMovieTap" data-movieId="{{movie.movieId}}">
-    <image class="movie-img" src="{{movie.coverageUrl}}"></image>
+  <view class="movie-container">
+    <image class="movie-img" src="{{movie.converageUrl}}"></image>
     <text class="movie-title">{{movie.title}}</text>
 
     <view class="stars-container">
@@ -29,18 +29,17 @@
   .movie-container {
     display: flex;
     flex-direction: column;
-    padding: 0 rpx(22);
   }
 
   .movie-img {
-    width: rpx(200);
+    width: rpx(220);
     height: rpx(270);
-    padding-bottom: rpx(20);
   }
 
   .movie-title {
-    margin-bottom: rpx(16);
+    margin-top: rpx(5);
     font-size: rpx(24);
+    color: #666;
   }
 
   .stars-container {
