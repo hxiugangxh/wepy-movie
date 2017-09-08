@@ -65,7 +65,17 @@
 //          console.log('请求数据')
 ////          util.http(URL, this.dealDoubanData)
 //        }
-        util.http(URL, this.dealDoubanData)
+        var param = {
+          url: URL,
+          method: 'GET',
+          header: {
+            'Content-Type': 'json'
+          }
+        }
+
+        wepy.request(param).then((d) => this.dealDoubanData(d.data))
+
+        //util.http(URL, this.dealDoubanData)
       }
     }
 
@@ -106,9 +116,11 @@
         }
       }
 
-      let that = this.__prevPage__
-      that.searchMovies = movies
-      that.$apply()
+//      let that = this.__prevPage__
+//      that.searchMovies = movies
+//      that.$apply()
+      this.searchMovies = movies
+      this.$apply()
 
       wepy.setStorageSync('searchMovies', movies)
     }
