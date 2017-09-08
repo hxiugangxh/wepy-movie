@@ -2,7 +2,7 @@
   <view class="search">
     <icon type="search" size="13"></icon>
     <input placeholder="请输入电影名称" bindfocus="onFocus" bindconfirm="query" placeholder-class="placeholder"/>
-    <image src="/images/icon/xx.png" wx:if="{{isSearch}}" catchtap="closeSearch"/>
+    <image src="/images/icon/xx.png" wx:if="{{isSearch}}" @tap.stop="closeSearch"/>
   </view>
 
   <view class="container" wx:if="{{!isSearch}}">
@@ -12,12 +12,19 @@
       </view>
     </repeat>
   </view>
+
+  <view class="search-pannel" wx:if="{{isSearch}}">
+      <repeat>
+        <movieDataGrid :movies="searchMovies"></movieDataGrid>
+      </repeat>
+  </view>
 </template>
 
 <script>
   import wepy from 'wepy'
   import MovieList from '../../components/movie-list'
   import util from '../../utils/util'
+  import MovieDataGrid from '../../components/movie-data-grid'
 
   export default class Movie extends wepy.page {
     config = {
@@ -25,7 +32,8 @@
     }
 
     components = {
-      movieList: MovieList
+      movieList: MovieList,
+      movieDataGrid: MovieDataGrid
     }
 
     data = {
@@ -37,7 +45,73 @@
       searchMovies: {}
     }
 
-    methods = {}
+    methods = {
+      onFocus() {
+        this.isSearch = true
+        this.$apply()
+      },
+      closeSearch() {
+        this.isSearch = false
+        this.$apply()
+      },
+      query(event) {
+        let URL = this.$parent.globalData.doubanBase + '/v2/movie/search?q=' + event.detail.value
+//        let searchMovies = wepy.getStorageSync('searchMovies')
+//
+//        if (searchMovies !== '') {
+//          this.searchMovies = searchMovies
+//          this.$apply()
+//        } else {
+//          console.log('请求数据')
+////          util.http(URL, this.dealDoubanData)
+//        }
+        util.http(URL, this.dealDoubanData)
+      }
+    }
+
+    dealDoubanData(data) {
+      let subjects = data.subjects
+
+      let movies = []
+      let rowMovie = []
+
+      for (let i = 0; i < subjects.length; i++) {
+        let subject = subjects[i]
+
+        let title = subject.title
+        if (title.length > 6) {
+          title = title.substring(0, 6) + '...'
+        }
+        let movie = {
+          stars: util.convertToStarsArray(subject.rating.stars),
+          converageUrl: subject.images.large,
+          title: title,
+          average: subject.rating.average
+        }
+
+        if (i === 0) {
+          rowMovie.push(movie)
+        } else {
+          if (i % 3 === 2) {
+            rowMovie.push(movie)
+            movies.push(rowMovie)
+            rowMovie = []
+          } else {
+            rowMovie.push(movie)
+          }
+        }
+
+        if (i === subjects.length - 1 && i % 3 !== 2) {
+          movies.push(rowMovie)
+        }
+      }
+
+      let that = this.__prevPage__
+      that.searchMovies = movies
+      that.$apply()
+
+      wepy.setStorageSync('searchMovies', movies)
+    }
 
     async onLoad() {
       let doubanBase = this.$parent.globalData.doubanBase
@@ -67,8 +141,6 @@
       } else {
         this.topicMovieList.push(top250)
       }
-
-      console.log(this.topicMovieList)
     }
 
     getMovieListData(url, key, myTitle) {
@@ -165,7 +237,7 @@
 
   .search input {
     height: 100%;
-    width: rpx(625);
+    width: rpx(595);
     font-size: rpx(28);
     margin-left: rpx(20);
   }

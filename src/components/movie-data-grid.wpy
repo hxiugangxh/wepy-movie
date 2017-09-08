@@ -18,9 +18,15 @@
 
   export default class MovieDataGrid extends wepy.component {
     data = {}
+    props = {
+      title: String
+    }
 
     components = {
       movie: Movie
+    }
+    onLoad() {
+      console.log('我静态传值了', this.title)
     }
   }
 </script>

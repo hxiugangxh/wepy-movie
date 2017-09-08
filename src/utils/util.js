@@ -1,26 +1,28 @@
+import wepy from 'wepy'
+
 function convertToStarsArray(stars) {
-  var num = stars.toString().substring(0, 1);
-  var array = [];
+  var num = stars.toString().substring(0, 1)
+  var array = []
   for (var i = 1; i <= 5; i++) {
     if (i <= num) {
-      array.push(1);
+      array.push(1)
     }
     else {
-      array.push(0);
+      array.push(0)
     }
   }
-  return array;
+  return array
 }
 
 function http(url, callBack) {
-  wx.request({
+  wepy.request({
     url: url,
     method: 'GET',
     header: {
-      "Content-Type": "json"
+      'Content-Type': 'json'
     },
     success: function (res) {
-      callBack(res.data);
+      callBack.call(this, res.data)
     },
     fail: function (error) {
       console.log(error)
@@ -29,28 +31,28 @@ function http(url, callBack) {
 }
 
 function convertToCastString(casts) {
-  var castsjoin = "";
+  var castsjoin = ''
   for (var idx in casts) {
-    castsjoin = castsjoin + casts[idx].name + " / ";
+    castsjoin = castsjoin + casts[idx].name + ' / '
   }
-  return castsjoin.substring(0, castsjoin.length - 2);
+  return castsjoin.substring(0, castsjoin.length - 2)
 }
 
 function convertToCastInfos(casts) {
   var castsArray = []
   for (var idx in casts) {
     var cast = {
-      img: casts[idx].avatars ? casts[idx].avatars.large : "",
+      img: casts[idx].avatars ? casts[idx].avatars.large : '',
       name: casts[idx].name
     }
-    castsArray.push(cast);
+    castsArray.push(cast)
   }
-  return castsArray;
+  return castsArray
 }
 
 module.exports = {
   convertToStarsArray: convertToStarsArray,
   http: http,
-  convertToCastString:convertToCastString,
-  convertToCastInfos:convertToCastInfos
+  convertToCastString: convertToCastString,
+  convertToCastInfos: convertToCastInfos
 }

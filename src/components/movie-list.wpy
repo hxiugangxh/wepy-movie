@@ -3,7 +3,7 @@
     <view class="movie-header">
       <text class="slogan">{{moiveList.title}}</text>
       <view class="more">
-        <text class="more-text" data-title="{{moiveList.title}}" catchtap="onMoreMoives">更多</text>
+        <text class="more-text" data-title="{{moiveList.title}}" @tap.stop="onMoreMoives({{moiveList.title}})">更多</text>
         <image class="more-img" src="/images/icon/arrow-right.png"></image>
       </view>
     </view>
@@ -25,6 +25,13 @@
 
     components = {
       movie: Movie
+    }
+    methods = {
+      onMoreMoives(title) {
+        wepy.navigateTo({
+          url: '/pages/movies/more-movies/more-movies?title=' + title
+        })
+      }
     }
   }
 </script>

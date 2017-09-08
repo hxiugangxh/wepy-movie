@@ -2,9 +2,8 @@
 
   <scroll-view scroll-y="true" style="height: 1205rpx" bindscrolltolower="onScrolltolower" lower-threshold="3">
     <repeat>
-      <movieDataGrid :movies="movies"></movieDataGrid>
+      <movieDataGrid :movies="movies" title="test props"></movieDataGrid>
     </repeat>
-
   </scroll-view>
 </template>
 
@@ -17,7 +16,6 @@
     components = {
       movieDataGrid: MovieDataGrid
     }
-
     data = {
       movies: []
     }
@@ -25,9 +23,7 @@
     methods = {}
 
     async onLoad(params) {
-      let title = '正在热映'
-
-      this.navigateTitle = title
+      this.navigateTitle = params.title
 
       let doubanBase = this.$parent.globalData.doubanBase
 
@@ -35,8 +31,8 @@
       let cominSoonUrl = doubanBase + '/v2/movie/coming_soon' + '?start=0&count=10'
       let top250Url = doubanBase + '/v2/movie/top250' + '?start=0&count=10'
 
-      this.$parent.globalData.moreMoviesTitle = title
-      switch (title) {
+      this.$parent.globalData.moreMoviesTitle = this.navigateTitle
+      switch (this.navigateTitle) {
         case '正在热映':
           this.loadMovies(inThreaterUrl, '正在热映')
           break

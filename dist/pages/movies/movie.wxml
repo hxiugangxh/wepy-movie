@@ -13,7 +13,7 @@
     <view class="movie-header">
       <text class="slogan">{{movieList.title}}</text>
       <view class="more">
-        <text class="more-text" data-title="{{movieList.title}}" catchtap="$movieList$onMoreMoives" data-com-index="{{index}}">更多</text>
+        <text class="more-text" data-title="{{movieList.title}}" catchtap="$movieList$onMoreMoives" data-com-index="{{index}}" data-wepy-params-a="{{movieList.title}}">更多</text>
         <image class="more-img" src="/images/icon/arrow-right.png"/>
       </view>
     </view>
@@ -42,4 +42,37 @@
 
       </view>
     </block>
+  </view>
+
+  <view class="search-pannel"  wx:if="{{isSearch}}">
+      <block>
+        
+  <view class="grid-container">
+    <block wx:for="{{searchMovies}}" wx:for-index="$movieDataGrid$index" wx:for-item="$movieDataGrid$rowMovie" wx:key="$movieDataGrid$key">
+      <view class="grid-row">
+        <block wx:for="{{$movieDataGrid$rowMovie}}" wx:for-index="$movieDataGrid$index" wx:for-item="$movieDataGrid$movie" wx:key="$movieDataGrid$key">
+          <view class="grid-row-movie">
+            
+  <view class="movie-container">
+    <image class="movie-img" src="{{$movieDataGrid$movie.converageUrl}}"/>
+    <text class="movie-title">{{$movieDataGrid$movie.title}}</text>
+
+    <view class="stars-container">
+      <view class="stars">
+        <block wx:for="{{$movieDataGrid$movie.stars}}" wx:for-index="$movieDataGrid$movie$index" wx:for-item="$movieDataGrid$movie$num" wx:key="$movieDataGrid$movie$key">
+          <image  wx:if="{{$movieDataGrid$movie$num}}" src="/images/icon/star.png"/>
+          <image  wx:else src="/images/icon/none-star.png"/>
+        </block>
+      </view>
+      <text class="star-score">{{$movieDataGrid$movie.average}}</text>
+    </view>
+  </view>
+
+          </view>
+        </block>
+      </view>
+    </block>
+  </view>
+
+      </block>
   </view>
