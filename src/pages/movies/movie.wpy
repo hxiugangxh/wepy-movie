@@ -1,6 +1,5 @@
 <template>
   <view class="search">
-    12
     <icon type="search" size="13"></icon>
     <input placeholder="请输入电影名称" bindfocus="onFocus" bindconfirm="query" placeholder-class="placeholder"/>
     <image src="/images/icon/xx.png" wx:if="{{isSearch}}" @tap.stop="closeSearch"/>
