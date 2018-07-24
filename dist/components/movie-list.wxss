@@ -1,2 +1,0 @@
-@import "./movie.wxss";
-.movie-list-container{background-color:#fff;display:flex;flex-direction:column}.movie-header{padding:10rpx 20rpx 22rpx;display:flex;flex-direction:row;justify-content:space-between;align-items:center}.slogan{font-size:24rpx}.more{display:flex;flex-direction:row;align-items:center}.more-text{margin-right:10rpx;color:#1f4ba5}.more-img{width:9rpx;height:16rpx}.movies-container{display:flex;flex-direction:row;justify-content:space-between;padding:0 20rpx}
