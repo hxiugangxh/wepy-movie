@@ -58,6 +58,10 @@
       let dataGrid = wepy.getStorageSync('dataGrid')
       let moreMoviesTitle = this.$parent.globalData.moreMoviesTitle
 
+      console.log(moreMoviesTitle !== loadTitle)
+      console.log('loadTitle = ' + URL)
+      console.log('loadTitle = ' + loadTitle)
+      console.log('moreMoviesTitle = ' + moreMoviesTitle)
       if (moreMoviesTitle !== loadTitle) {
         console.log('请求数据')
         util.http(URL, this.dealDoubanData)
@@ -65,7 +69,7 @@
         if (dataGrid) {
           this.dealDoubanData(dataGrid)
         } else {
-          console.log('请求数据')
+          console.log('请求数据' + URL)
           util.http(URL, this.dealDoubanData)
         }
       }
@@ -74,6 +78,8 @@
     dealDoubanData(dataGrid) {
       wepy.setStorageSync('dataGrid', dataGrid)
       let subjects = dataGrid.subjects
+
+      console.log('subjects', subjects)
 
       let movies = []
       let rowMovie = []

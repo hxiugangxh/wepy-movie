@@ -19,14 +19,9 @@ function http(url, callBack) {
     method: 'GET',
     header: {
       'Content-Type': 'json'
-    },
-    success: function (res) {
-      callBack.call(this, res.data)
-      // callBack.apply(this, [res.data])
-    },
-    fail: function (error) {
-      console.log(error)
     }
+  }).then((res) => {
+    callBack.call(this, res.data)
   })
 }
 
