@@ -10,7 +10,6 @@
   export default class extends wepy.app {
     config = {
       pages: [
-
         'pages/movies/movie',
         'pages/posts/post',
         'pages/movies/more-movies/more-movies',
@@ -48,14 +47,40 @@
     globalData = {
       isPlayingMusic: false,
       backgroundMusicId: null,
-      doubanBase: 'https://api.douban.com',
-      moreMoviesTitle: ''
+      doubanBase: 'https://douban.uieee.com',
+      moreMoviesTitle: '',
+      auth: {}
     }
 
     constructor() {
       super()
       this.use('requestfix')
       this.use('promisify')
+
+      this.intercept('request', {
+        config(p) {
+          p.header = this.createAuthHeader(p)
+          return p
+        }
+      })
+    }
+
+    /**
+     * 构造权限头部
+     */
+    createAuthHeader(p) {
+      var header = {}
+      if (p && p.header) {
+        header = p.header
+      }
+      const accessToken = wepy.$instance.globalData.auth.access_token
+      if (accessToken) {
+        if (!(header['Authorization'] && header['Authorization'].startsWith('Basic'))) {
+          header['Authorization'] = 'bearer ' + accessToken
+        }
+      }
+
+      return header
     }
 
     onLaunch() {
@@ -71,7 +96,8 @@
     }
 
     async testAsync() {
-      const data = await this.sleep(3)
+      const data = await
+        this.sleep(3)
       console.log(data)
     }
 

@@ -56,15 +56,7 @@
       },
       query(event) {
         let URL = this.$parent.globalData.doubanBase + '/v2/movie/search?q=' + event.detail.value
-//        let searchMovies = wepy.getStorageSync('searchMovies')
-//
-//        if (searchMovies !== '') {
-//          this.searchMovies = searchMovies
-//          this.$apply()
-//        } else {
-//          console.log('请求数据')
-////          util.http(URL, this.dealDoubanData)
-//        }
+
         var param = {
           url: URL,
           method: 'GET',
@@ -74,8 +66,6 @@
         }
 
         wepy.request(param).then((d) => this.dealDoubanData(d.data))
-
-        //util.http(URL, this.dealDoubanData)
       }
     }
 
@@ -136,6 +126,7 @@
       let cominSoon = wepy.getStorageSync('cominSoon')
       let top250 = wepy.getStorageSync('top250')
 
+      console.log('inThreater')
       if (inThreater === '') {
         this.getMovieListData(inThreaterUrl, 'inThreater', '正在热映')
       } else {
@@ -163,15 +154,9 @@
         method: 'GET',
         header: {
           'Content-Type': 'json'
-        },
-        success: function (res) {
-          console.log('请求成功')
-          console.log(res)
-          that.processDoubanData(res.data, key, myTitle)
-        },
-        fail: function () {
-          console.log('请求失败')
         }
+      }).then((res) => {
+        that.processDoubanData(res.data, key, myTitle)
       })
     }
 
